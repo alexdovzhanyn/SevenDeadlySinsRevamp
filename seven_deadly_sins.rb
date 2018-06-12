@@ -8,6 +8,8 @@ class SevenDeadlySins < Gosu::Window
     @player = Player.new(0,0,0,40,40)
     @tiles = Gosu::Image.load_tiles('./assets/tiles/map_tiles.png', 16, 16)
     puts @tiles.length
+    @font = Gosu::Font.new(32)
+
   end
 
   def update
@@ -18,7 +20,8 @@ class SevenDeadlySins < Gosu::Window
     @player.draw
     x = 0
     y = 0
-    @tiles.each do |tile|
+    @tiles.each_with_index do |tile, i|
+      @font.draw(i, x, y, 2)
       tile.draw(x, y, 1, 4, 4)
       x += 64
       if x >= 1472
