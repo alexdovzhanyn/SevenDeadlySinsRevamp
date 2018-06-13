@@ -1,7 +1,7 @@
 class LevelMapper
   attr_accessor :tiles
 
-  TILE_SIZE = 32
+  TILE_SIZE = 64
 
   def initialize(window, mapfile, sprites)
     @window = window
@@ -33,15 +33,15 @@ class LevelMapper
       map_row.each_with_index do |map_tile, tile_index|
         Gosu.draw_rect(x, y, TILE_SIZE, TILE_SIZE, 0xff292634, 0)
         if map_tile == nil
-          x += 32
+          x += TILE_SIZE
           next
         end
-        @sprites[@map[row_index][tile_index]].draw(x, y, 1, 2, 2)
-        x += 32
+        @sprites[@map[row_index][tile_index]].draw(x, y, 1, TILE_SIZE / 16, TILE_SIZE / 16)
+        x += TILE_SIZE
       end
 
       x = 0
-      y += 32
+      y += TILE_SIZE
     end
   end
 
@@ -60,14 +60,14 @@ class LevelMapper
   def render_debug_tilemap(x, y)
     @sprites.each_with_index do |tile, i|
       @font.draw(i, x, y, 2)
-      tile.draw(x, y, 1, 2, 2)
-      x += 32
-      if x >= 736
+      tile.draw(x, y, 1, TILE_SIZE / 16, TILE_SIZE / 16)
+      x += TILE_SIZE
+      if x >= @window.width
         x = 0
-        y += 32
+        y += TILE_SIZE
       end
     end
 
-    [x, y + 128]
+    [0, y + TILE_SIZE]
   end
 end
