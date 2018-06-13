@@ -1,34 +1,29 @@
 require_relative 'initializer'
 
 class SevenDeadlySins < Gosu::Window
+  WIDTH = 1920
+  HEIGHT = 1080
+
   def initialize
-    super 1920, 1080
+    super WIDTH, HEIGHT
     self.caption = "Seven Deadly Sins"
 
-    @player = Player.new(0,0,0,40,40)
-    @tiles = Gosu::Image.load_tiles('./assets/tiles/map_tiles.png', 16, 16)
-    puts @tiles.length
-    @font = Gosu::Font.new(32)
+    @player = Player.new(0,0,10,40,40)
+    @game_tiles = Gosu::Image.load_tiles('./assets/tiles/map_tiles.png', 16, 16, {retro: true}) # Retro means no weird border around smaller tiles
 
+    @level_mapper = LevelMapper.new(self, 'test.map', @game_tiles)
+    @map_tiles = @level_mapper.tiles
   end
 
   def update
+    # puts Gosu.fps
     @player.update
+    @level_mapper.update
   end
 
   def draw
     @player.draw
-    x = 0
-    y = 0
-    @tiles.each_with_index do |tile, i|
-      @font.draw(i, x, y, 2)
-      tile.draw(x, y, 1, 4, 4)
-      x += 64
-      if x >= 1472
-        x = 0
-        y += 64
-      end
-    end
+    @level_mapper.draw
   end
 end
 
