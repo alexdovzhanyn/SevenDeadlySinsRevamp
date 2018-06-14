@@ -1,8 +1,7 @@
 require_relative 'initializer'
 
 class SevenDeadlySins < Gosu::Window
-  WIDTH = 1920
-  HEIGHT = 1080
+  WIDTH, HEIGHT = 1920, 1080
 
   def initialize
     super WIDTH, HEIGHT
@@ -11,7 +10,7 @@ class SevenDeadlySins < Gosu::Window
     @player = Player.new(0,0,10,40,40)
     @game_tiles = Gosu::Image.load_tiles('./assets/tiles/map_tiles.png', 16, 16, {retro: true}) # Retro means no weird border around smaller tiles
 
-    @level_mapper = LevelMapper.new(self, 'test.map', @game_tiles)
+    @level_mapper = LevelMapper.new(self, 'test.json', @game_tiles)
     @map_tiles = @level_mapper.tiles
   end
 

@@ -1,4 +1,5 @@
 require 'gosu'
+require 'json'
 require 'pry'
 require_relative 'lib/bounding_box'
 require_relative 'lib/level_mapper'
