@@ -30,12 +30,14 @@ class LevelBuilder < Gosu::Window
           if @tile_selected
             @map[clicked_map_location][exact_tile_location][:tile] = @tile_selected[:image]
             @map[clicked_map_location][exact_tile_location][:z] = @current_z
+            @map[clicked_map_location][exact_tile_location][:sprite_index] = @tile_selected[:sprite_index]
           else
             @map[clicked_map_location][exact_tile_location][:tile] = nil
+            @map[clicked_map_location][exact_tile_location][:sprite_index] = nil
           end
         elsif !exact_tile_location && @tile_selected
           ref = @map[clicked_map_location][0]
-          @map[clicked_map_location] << {x: ref[:x], y: ref[:y], z: @current_z, tile: @tile_selected[:image]}
+          @map[clicked_map_location] << {x: ref[:x], y: ref[:y], z: @current_z, tile: @tile_selected[:image], sprite_index: @tile_selected[:sprite_index]}
         end
       end
     elsif !Gosu.button_down?(Gosu::MS_LEFT) && @mouse_left_down
@@ -46,6 +48,10 @@ class LevelBuilder < Gosu::Window
       if @current_z - 1 > 1
         @current_z -= 1
       end
+    elsif Gosu.button_down?(Gosu::KB_LEFT_SHIFT) && Gosu.button_down?(Gosu::KB_S)
+      tmp = @map.map {|tiles| tiles.map {|tile| {x: tile[:x], y: tile[:y], z: tile[:z], sprite_index: tile[:sprite_index]}}}.to_json
+      File.write(File.join(File.dirname(__FILE__), 'assets', 'maps', 'test.json'), tmp)
+      puts "Saved!"
     end
   end
 
@@ -71,14 +77,13 @@ class LevelBuilder < Gosu::Window
 
     @menu_tiles = []
 
-    @game_tiles.each do |tile|
+    @game_tiles.each_with_index do |tile, i|
       if x + MENU_TILE_SIZE - 1 >= MENU_WIDTH
         x = 0
         y += MENU_TILE_SIZE
       end
 
-      @menu_tiles << {x: x, y: y, image: tile}
-
+      @menu_tiles << {x: x, y: y, image: tile, sprite_index: i}
       x += MENU_TILE_SIZE
     end
 
