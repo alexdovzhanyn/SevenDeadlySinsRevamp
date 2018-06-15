@@ -1,6 +1,8 @@
 require 'gosu'
 require 'json'
 require 'pry'
+require 'observer'
+require_relative 'lib/camera'
 require_relative 'lib/bounding_box'
 require_relative 'lib/level_mapper'
 require_relative 'lib/humanoid'
