@@ -12,6 +12,7 @@ class LevelBuilder < Gosu::Window
     @current_z = 2
     load_menu
     @font = Gosu::Font.new(32)
+    @font_small = Gosu::Font.new(16)
   end
 
   def update
@@ -39,6 +40,7 @@ class LevelBuilder < Gosu::Window
             @map[clicked_map_location][exact_tile_location][:tile] = @tile_selected[:image]
             @map[clicked_map_location][exact_tile_location][:z] = @current_z
             @map[clicked_map_location][exact_tile_location][:sprite_index] = @tile_selected[:sprite_index]
+            @map[clicked_map_location][exact_tile_location][:valid_location] = @tile_selected[:valid_location]
           else
             # No selected sprite = delete tile in selected location
             @map[clicked_map_location][exact_tile_location][:tile] = nil
@@ -47,7 +49,14 @@ class LevelBuilder < Gosu::Window
         elsif !exact_tile_location && @tile_selected
           # We don't have a tile with the z-index in the tileset we've selected, so lets append a new one to the array
           ref = @map[clicked_map_location][0]
-          @map[clicked_map_location] << {x: ref[:x], y: ref[:y], z: @current_z, tile: @tile_selected[:image], sprite_index: @tile_selected[:sprite_index]}
+          @map[clicked_map_location] << {
+            x: ref[:x],
+            y: ref[:y],
+            z: @current_z,
+            tile: @tile_selected[:image],
+            sprite_index: @tile_selected[:sprite_index],
+            valid_location: @tile_selected[:valid_location]
+          }
         end
       end
     elsif !Gosu.button_down?(Gosu::MS_LEFT) && @mouse_left_down
@@ -61,7 +70,7 @@ class LevelBuilder < Gosu::Window
         @current_z -= 1
       end
     elsif Gosu.button_down?(Gosu::KB_LEFT_SHIFT) && Gosu.button_down?(Gosu::KB_S)
-      tmp = @map.map {|tiles| tiles.map {|tile| {x: tile[:x], y: tile[:y], z: tile[:z], sprite_index: tile[:sprite_index]}}}.to_json
+      tmp = @map.map {|tiles| tiles.map {|tile| {x: tile[:x], y: tile[:y], z: tile[:z], sprite_index: tile[:sprite_index], valid_location: tile[:valid_location]}}}.to_json
       File.write(File.join(File.dirname(__FILE__), 'assets', 'maps', 'test.json'), tmp)
       puts "Saved!"
     end
@@ -97,12 +106,21 @@ class LevelBuilder < Gosu::Window
       @menu_tiles << {x: x, y: y, image: tile, sprite_index: i}
       x += MENU_TILE_SIZE
     end
+
+    @menu_tiles << {
+      x: @menu_tiles.last[:x] + MENU_TILE_SIZE,
+      y: @menu_tiles.last[:y] + MENU_TILE_SIZE,
+      image: @menu_tiles.first[:image],
+      sprite_index: "VVV",
+      valid_location: true
+    }
   end
 
   def draw_menu
-    @menu_tiles.each do |tile|
+    @menu_tiles.each_with_index do |tile, tile_index|
       color = mouse_x >= tile[:x] && mouse_x <= tile[:x] + MENU_TILE_SIZE - 1 && mouse_y >= tile[:y] && mouse_y <= tile[:y] + MENU_TILE_SIZE - 1 ? 0xaaffffff : 0xffffffff
       tile[:image].draw(tile[:x], tile[:y], 1, MENU_TILE_SIZE / 16 - 0.2, MENU_TILE_SIZE / 16 - 0.2, color)
+      @font_small.draw(tile_index, tile[:x], tile[:y], 100)
     end
   end
 

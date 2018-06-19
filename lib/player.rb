@@ -2,9 +2,10 @@ class Player < Humanoid
   include Observable
   HARD_EDGE = 300
 
-  def initialize(window, *opts)
-    @width, @height = 32, 64
-    opts += [@width, @height]
+  def initialize(window, game_tiles, *opts)
+    @width, @height = 64, 64
+    sprites = [game_tiles[152], game_tiles[153], game_tiles[175], game_tiles[176]]
+    opts += [@width, @height, sprites]
     super(*opts)
     @window = window
   end

@@ -8,6 +8,8 @@ class LevelMapper
     @font = Gosu::Font.new(16)
     @offset_x, @offset_y = 0, 0
     @tiles_within_viewport = @map.select {|tileset| within_viewport?(tileset[0]['x'], tileset[0]['y'])}
+    @valid_player_locations = find_valid_player_locations
+
     # Pre-record map so that we can speed up rendering.
     create_static_recording
 
@@ -22,6 +24,7 @@ class LevelMapper
     # Chunk tile loads so that we aren't reloading @tiles_within_viewport every time the offset changes
     if @offset_x > 0 && @offset_x % HARD_EDGE == 0 || @offset_y > 0 && @offset_y % HARD_EDGE == 0
       @tiles_within_viewport = @map.select {|tileset| within_viewport?(tileset[0]['x'], tileset[0]['y'])}
+      @valid_player_locations = find_valid_player_locations
       create_static_recording
     end
   end
@@ -45,12 +48,22 @@ class LevelMapper
     x - @offset_x - HARD_EDGE - 150 <= @window.width && y - @offset_y - HARD_EDGE - 150 <= @window.height
   end
 
+  def valid_location?(tileset)
+    !!tileset.find {|tile| tile['valid_location']}
+  end
+
+  def find_valid_player_locations
+    @tiles_within_viewport.select {|tileset| valid_location? tileset}.map {|tileset| [(tileset[0]['x']..tileset[0]['x'] + TILE_SIZE), ((tileset[0]['y']..tileset[0]['y'] + TILE_SIZE))]}
+  end
+
   def create_static_recording
     @map_rec = @window.record(@window.width, @window.height) do |x, y|
       @tiles_within_viewport.each do |tiles|
         tiles.each do |tile|
           Gosu.draw_rect(tile['x'], tile['y'], TILE_SIZE, TILE_SIZE, 0xff292634, 1)
-          if tile['sprite_index']
+          if tile['valid_location']
+            Gosu.draw_rect(tile['x'], tile['y'], TILE_SIZE, TILE_SIZE, 0x7700ff00, tile['z'])
+          elsif tile['sprite_index']
             @sprites[tile['sprite_index']].draw(tile['x'], tile['y'], tile['z'], TILE_SIZE / 16, TILE_SIZE / 16)
           end
         end
