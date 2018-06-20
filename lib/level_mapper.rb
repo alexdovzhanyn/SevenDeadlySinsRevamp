@@ -2,13 +2,13 @@ class LevelMapper
   TILE_SIZE = 32
   HARD_EDGE = 300
 
-  def initialize(window, mapfile, sprites, camera)
-    @window, @sprites = window, sprites
+  def initialize(window, mapfile, sprites, camera, game_state)
+    @window, @sprites, @game_state = window, sprites, game_state
     @map = initialize_mapfile(mapfile)
     @font = Gosu::Font.new(16)
     @offset_x, @offset_y = 0, 0
     @tiles_within_viewport = @map.select {|tileset| within_viewport?(tileset[0]['x'], tileset[0]['y'])}
-    @valid_player_locations = find_valid_player_locations
+    @game_state[:valid_locations] = find_valid_player_locations
 
     # Pre-record map so that we can speed up rendering.
     create_static_recording
@@ -24,9 +24,10 @@ class LevelMapper
     # Chunk tile loads so that we aren't reloading @tiles_within_viewport every time the offset changes
     if @offset_x > 0 && @offset_x % HARD_EDGE == 0 || @offset_y > 0 && @offset_y % HARD_EDGE == 0
       @tiles_within_viewport = @map.select {|tileset| within_viewport?(tileset[0]['x'], tileset[0]['y'])}
-      @valid_player_locations = find_valid_player_locations
       create_static_recording
     end
+
+    @game_state[:valid_locations] = find_valid_player_locations
   end
 
   def draw
@@ -53,7 +54,23 @@ class LevelMapper
   end
 
   def find_valid_player_locations
-    @tiles_within_viewport.select {|tileset| valid_location? tileset}.map {|tileset| [(tileset[0]['x']..tileset[0]['x'] + TILE_SIZE), ((tileset[0]['y']..tileset[0]['y'] + TILE_SIZE))]}
+    # Array of arrays of ranges [[0..2, 10..12], [3..7, 9..23]]
+    locations = @tiles_within_viewport.select {|tileset| valid_location? tileset}.map {|tileset| [((tileset[0]['x'] - @offset_x)..(tileset[0]['x'] - @offset_x + TILE_SIZE)), ((tileset[0]['y'] - @offset_y)..(tileset[0]['y'] - @offset_y + TILE_SIZE))]}
+
+    newLocations = []
+
+    # Some ranges may pick up where others left off. These should be concatenated into one big range
+    locations.each do |location|
+      if newLocations.last && location[0].begin == newLocations.last[0].end && location[1] == newLocations.last[1]
+        newLocations.last[0] = (newLocations.last[0].begin..location[0].end)
+      elsif newLocations.last && location[1].begin == newLocations.last[1].end && location[0] == newLocations.last[0]
+        newLocations.last[1] = (newLocations.last[1].begin..location[1].end)
+      else
+        newLocations << location.clone
+      end
+    end
+
+    newLocations
   end
 
   def create_static_recording
@@ -62,7 +79,7 @@ class LevelMapper
         tiles.each do |tile|
           Gosu.draw_rect(tile['x'], tile['y'], TILE_SIZE, TILE_SIZE, 0xff292634, 1)
           if tile['valid_location']
-            Gosu.draw_rect(tile['x'], tile['y'], TILE_SIZE, TILE_SIZE, 0x7700ff00, tile['z'])
+            # Gosu.draw_rect(tile['x'], tile['y'], TILE_SIZE, TILE_SIZE, 0x7700ff00, tile['z'])
           elsif tile['sprite_index']
             @sprites[tile['sprite_index']].draw(tile['x'], tile['y'], tile['z'], TILE_SIZE / 16, TILE_SIZE / 16)
           end

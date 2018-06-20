@@ -1,7 +1,7 @@
 class Humanoid
   attr_reader :bounding_box, :move_speed
 
-  def initialize(x, y, z, w, h, sprites, move_speed = 5)
+  def initialize(x, y, z, w, h, sprites, move_speed = 2)
     @move_speed = move_speed
     @bounding_box = BoundingBox.new(x, y, z, w, h)
     @sprites = sprites
@@ -13,6 +13,7 @@ class Humanoid
       @spritemap.each do |row|
         row.each do |tiles|
           tiles.each do |tile|
+            # Gosu.draw_rect(@bounding_box.x + tile[:x], @bounding_box.y + tile[:y], 32, 32, Gosu::Color::RED, @bounding_box.z - 1)
             tile[:image].draw(@bounding_box.x + tile[:x], @bounding_box.y + tile[:y], @bounding_box.z, 32 / 16, 32 / 16)
           end
         end
