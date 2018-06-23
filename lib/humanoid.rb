@@ -35,6 +35,8 @@ class Humanoid
   end
 
   def move(direction)
+    return if !moving_to_valid_location?(direction)
+
     if direction == :left
       @bounding_box.x -= @move_speed
     elsif direction == :right
@@ -44,5 +46,14 @@ class Humanoid
     else
       @bounding_box.y += @move_speed
     end
+  end
+
+  def moving_to_valid_location?(direction)
+    direction_modifier_x = if direction == :left then -self.move_speed elsif direction == :right then self.move_speed else 0 end
+    direction_modifier_y = if direction == :up then -self.move_speed elsif direction == :down then self.move_speed else 0 end
+    potential_x = ((bounding_box.x + 2) + direction_modifier_x)..((bounding_box.x - 2) + bounding_box.w + direction_modifier_x)
+    potential_y = (bounding_box.y + bounding_box.h + direction_modifier_y)..(bounding_box.y + bounding_box.h + direction_modifier_y)
+
+    GameState.valid_locations.any? {|location| range_contains_range?(location[0], potential_x) && range_contains_range?(location[1], potential_y)}
   end
 end
