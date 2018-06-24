@@ -1,13 +1,13 @@
-class MainMenuScene < Scene
+class OptionsScene < Scene
 
   def initialize
     super
 
     @offset_x = @window.width * 0.05
     options = [
-      { text: 'New Game', action: ->(){ GameState.set_state(current_scene: GameScene.new) } },
-      { text: 'Options', action: ->(){ GameState.set_state(current_scene: OptionsScene.new) } },
-      { text: 'Exit to Desktop', action: ->(){ exit }}
+      { text: 'Video Options', action: ->(){ GameState.set_state(current_scene: MainMenuScene.new) } },
+      { text: 'Audio Options', action: ->(){ GameState.set_state(current_scene: MainMenuScene.new) } },
+      { text: 'Back to Menu', action: ->(){ GameState.set_state(current_scene: MainMenuScene.new) }}
     ]
 
     @clickspots = []
@@ -48,22 +48,10 @@ class MainMenuScene < Scene
 
   def draw
     @background.draw(0,0,0)
-
-    title = Gosu::Image.from_text('Seven Deadly Sins', 64, {
-      font: 'assets/fonts/8-bit-limit/8bitlim.ttf',
-      align: :left,
-      width: @window.width - @window.width * 0.3
-    })
-
-    title.draw(@offset_x, @window.height * 0.1, 2)
-
-    title.draw(@offset_x, @window.height * 0.1 + 5, 1, 1, 1, 0xaa000000)
-
-    @buttons.draw(0, 0, 1)
+    @buttons.draw(0,0,1)
   end
 
   def update
-    # Gosu.milliseconds eventually wraps. This will become a problem is the game runs for a while
     if Gosu.button_down?(Gosu::MS_LEFT) && Gosu.milliseconds > GameState.last_click.to_i + 200
       button = @clickspots.find {|spot| spot[:x].include?(@window.mouse_x) && spot[:y].include?(@window.mouse_y)}
       if button

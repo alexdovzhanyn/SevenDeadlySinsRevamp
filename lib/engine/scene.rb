@@ -13,7 +13,7 @@ class Scene
   end
 
   def needs_cursor?
-    false
+    true
   end
 
 end

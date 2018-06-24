@@ -19,4 +19,8 @@ class GameScene < Scene
     @level_mapper.draw
   end
 
+  def needs_cursor?
+    false
+  end
+
 end

@@ -14,6 +14,7 @@ require_relative 'lib/player.rb'
 require_relative 'lib/game/scenes/title_scene'
 require_relative 'lib/game/scenes/main_menu_scene'
 require_relative 'lib/game/scenes/game_scene'
+require_relative 'lib/game/scenes/options_scene'
 
 include Helper
 
