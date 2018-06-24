@@ -3,6 +3,8 @@ class OptionsScene < Scene
   def initialize
     super
 
+    puts '[Show Options]'
+
     @offset_x = @window.width * 0.05
     options = [
       { text: 'Video Options', action: ->(){ GameState.set_state(current_scene: MainMenuScene.new) } },

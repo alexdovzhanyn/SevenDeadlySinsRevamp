@@ -2,6 +2,7 @@ class TitleScene < Scene
 
   def initialize
     super
+    puts '[Show Title Screen]'
     @color = 0xff000000
   end
 

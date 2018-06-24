@@ -3,6 +3,8 @@ class MainMenuScene < Scene
   def initialize
     super
 
+    puts '[Show Main Menu]'
+
     @offset_x = @window.width * 0.05
     options = [
       { text: 'New Game', action: ->(){ GameState.set_state(current_scene: GameScene.new) } },
@@ -67,6 +69,7 @@ class MainMenuScene < Scene
     if Gosu.button_down?(Gosu::MS_LEFT) && Gosu.milliseconds > GameState.last_click.to_i + 200
       button = @clickspots.find {|spot| spot[:x].include?(@window.mouse_x) && spot[:y].include?(@window.mouse_y)}
       if button
+        puts '[End Main Menu]'
         GameState.set_state(last_click: Gosu.milliseconds)
         button[:action].call
       end
