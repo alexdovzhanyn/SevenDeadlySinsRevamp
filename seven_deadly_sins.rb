@@ -5,22 +5,28 @@ class SevenDeadlySins < Gosu::Window
 
   def initialize
     print_debug_info
+    Store.subscribe(self)
     super WIDTH, HEIGHT
     self.caption = TITLE
-    GameState.set_state(window: self)
-    GameState.set_state(current_scene: TitleScene.new)
+
+    Store.dispatch(type: 'SET_WINDOW', payload: self)
+    Store.dispatch(type: 'SET_SCENE', payload: TitleScene)
   end
 
   def update
-    GameState.current_scene.update
+    Store.state.game.scene.update
   end
 
   def draw
-    GameState.current_scene.draw
+    Store.state.game.scene.draw
   end
 
   def needs_cursor?
-    GameState.current_scene.needs_cursor?
+    @needs_cursor
+  end
+
+  def state_changed(state, _)
+    @needs_cursor = state.game.cursor
   end
 
   def print_debug_info

@@ -1,5 +1,6 @@
 class GameState
   @@state = {}
+  @@listeners = []
 
   def self.set_state(state = {})
     state.each do |k, v|
@@ -10,6 +11,8 @@ class GameState
           return @@state[k]
         end
       end
+
+      self.notify_listeners
     end
   end
 
@@ -21,4 +24,13 @@ class GameState
     @@state
   end
 
+  def self.subscribe(instance, callback)
+    @@listeners << { i: instance, c: callback }
+  end
+
+  def self.notify_listeners
+    @@listeners.each do |listener|
+      listener[:i].public_send(listener[:c], @@state)
+    end
+  end
 end

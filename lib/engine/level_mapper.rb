@@ -3,12 +3,14 @@ class LevelMapper
   HARD_EDGE = 300
 
   def initialize(mapfile, camera)
-    @window, @sprites = GameState.window, GameState.tiles
+    Store.subscribe(self)
+    @window, @sprites = Store.state.game.window, Store.state.game.tiles
     @map = initialize_mapfile(mapfile)
     @font = Gosu::Font.new(16)
     @offset_x, @offset_y = 0, 0
     @tiles_within_viewport = @map.select {|tileset| within_viewport?(tileset[0]['x'], tileset[0]['y'])}
-    GameState.set_state({valid_locations: find_valid_player_locations})
+
+    find_valid_player_locations
 
     # Pre-record map so that we can speed up rendering.
     create_static_recording
@@ -27,7 +29,7 @@ class LevelMapper
       create_static_recording
     end
 
-    GameState.set_state({valid_locations: find_valid_player_locations})
+    find_valid_player_locations
   end
 
   def draw
@@ -71,7 +73,7 @@ class LevelMapper
       end
     end
 
-    newLocations
+    Store.dispatch(type: 'UPDATE_VALID_LOCATIONS', payload: newLocations)
   end
 
   def create_static_recording

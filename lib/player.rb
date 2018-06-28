@@ -4,11 +4,11 @@ class Player < Humanoid
 
   def initialize(*opts)
     @width, @height = 64, 64
-    tiles = GameState.tiles
+    tiles = Store.state.game.tiles
     sprites = [tiles[152], tiles[153], tiles[175], tiles[176]]
     opts += [@width, @height, sprites]
     super(*opts)
-    @window = GameState.window
+    @window = Store.state.game.window
   end
 
   def update
