@@ -5,12 +5,12 @@ class SevenDeadlySins < Gosu::Window
 
   def initialize
     print_debug_info
-    Store.subscribe(self)
+    Store.subscribe{ [:game] }
     super WIDTH, HEIGHT
     self.caption = TITLE
 
-    Store.dispatch(type: 'SET_WINDOW', payload: self)
-    Store.dispatch(type: 'SET_SCENE', payload: TitleScene)
+    Store.dispatch('SET_WINDOW', self)
+    Store.dispatch('SET_SCENE', TitleScene)
   end
 
   def update
@@ -25,7 +25,7 @@ class SevenDeadlySins < Gosu::Window
     @needs_cursor
   end
 
-  def state_changed(state, _)
+  def state_changed(state)
     @needs_cursor = state.game.cursor
   end
 

@@ -6,8 +6,8 @@ class MainMenuScene < Scene
     puts '[Show Main Menu]'
 
     options = [
-      { text: 'New Game', action: ->(){ Store.dispatch(type: 'SET_SCENE', payload: GameScene) } },
-      { text: 'Options', action: ->(){ Store.dispatch(type: 'SET_SCENE', payload: OptionsScene) } },
+      { text: 'New Game', action: ->(){ start_new_game } },
+      { text: 'Options', action: ->(){ Store.dispatch('SET_SCENE', OptionsScene) } },
       { text: 'Exit to Desktop', action: ->(){ exit }}
     ]
 
@@ -33,13 +33,13 @@ class MainMenuScene < Scene
     @buttons.draw(0, 0, 1)
   end
 
-  def state_changed(new_state, last_action)
-    super(new_state, last_action)
-
-    if last_action == 'SET_SCENE'
-      Store.dispatch(type: 'SET_CURSOR', payload: true)
-    end
-
+  def start_new_game
+    Store.dispatch('SET_SCENE', GameScene, ->{
+      Store.dispatch('SET_CURSOR', false, ->{
+        locations = Store.game.scene.level_mapper.find_valid_player_locations
+        Store.game.scene.level_mapper.set_valid_player_locations(locations)
+      })
+    })
   end
 
 end

@@ -25,7 +25,7 @@ class TitleScene < Scene
       }).draw(@window.width * 0.15, @window.height * 0.3, 1)
     when 5001..6000
       puts '[End Tile Screen]'
-      Store.dispatch(type: 'SET_SCENE', payload: MainMenuScene)
+      Store.dispatch('SET_SCENE', MainMenuScene, ->{ Store.dispatch('SET_CURSOR', true) })
     end
   end
 

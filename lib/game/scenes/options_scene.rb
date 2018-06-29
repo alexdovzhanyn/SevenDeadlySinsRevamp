@@ -6,9 +6,9 @@ class OptionsScene < Scene
     puts '[Show Options]'
 
     options = [
-      { text: 'Video Options', action: ->(){ Store.dispatch(type: 'SET_SCENE', payload: VideoSettingsScene) } },
-      { text: 'Audio Options', action: ->(){ Store.dispatch(type: 'SET_SCENE', payload: MainMenuScene) } },
-      { text: 'Back to Menu', action: ->(){ Store.dispatch(type: 'SET_SCENE', payload: MainMenuScene) }}
+      { text: 'Video Options', action: ->(){ Store.dispatch('SET_SCENE', VideoSettingsScene) } },
+      { text: 'Audio Options', action: ->(){ Store.dispatch('SET_SCENE', MainMenuScene) } },
+      { text: 'Back to Menu', action: ->(){ Store.dispatch('SET_SCENE', MainMenuScene) }}
     ]
 
     @clickspots = []
@@ -21,15 +21,5 @@ class OptionsScene < Scene
     @background.draw(0, 0, 0)
     @buttons.draw(0, 0, 1)
   end
-
-  def state_changed(new_state, last_action)
-    super(new_state, last_action)
-
-    if last_action == 'SET_SCENE'
-      Store.dispatch(type: 'SET_CURSOR', payload: true)
-    end
-
-  end
-
 
 end

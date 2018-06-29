@@ -19,13 +19,9 @@ class VideoSettingsScene < Scene
     super
   end
 
-  def state_changed(new_state, last_action)
-    super(new_state, last_action)
+  def state_changed(new_state)
+    super(new_state)
 
-    if last_action == 'SET_SCENE'
-      Store.dispatch(type: 'SET_CURSOR', payload: true)
-    end
-    
     @options = generate_options
     initialize_buttons(@options)
   end

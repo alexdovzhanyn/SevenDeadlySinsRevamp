@@ -17,7 +17,7 @@ class Scene
     if @buttons && Gosu.button_down?(Gosu::MS_LEFT) && Gosu.milliseconds > (Store.state.game.last_click || 0) + 200
       button = @clickspots.find {|spot| spot[:x].include?(@window.mouse_x) && spot[:y].include?(@window.mouse_y)}
       if button
-        Store.dispatch(type: 'SET_LAST_CLICK', payload: Gosu.milliseconds)
+        Store.dispatch('SET_LAST_CLICK', Gosu.milliseconds)
         button[:action].call
       end
     end
@@ -51,13 +51,8 @@ class Scene
     end
   end
 
-  def state_changed(new_state, last_action)
+  def state_changed(new_state)
     @tiles = new_state.game.tiles
-
-    if last_action == 'SET_SCENE'
-      puts "Dipatching from #{self.object_id}"
-      Store.dispatch(type: 'SET_CURSOR', payload: false)
-    end
   end
 
 end

@@ -10,8 +10,6 @@ class LevelMapper
     @offset_x, @offset_y = 0, 0
     @tiles_within_viewport = @map.select {|tileset| within_viewport?(tileset[0]['x'], tileset[0]['y'])}
 
-    find_valid_player_locations
-
     # Pre-record map so that we can speed up rendering.
     create_static_recording
 
@@ -73,7 +71,7 @@ class LevelMapper
       end
     end
 
-    Store.dispatch(type: 'UPDATE_VALID_LOCATIONS', payload: newLocations)
+    newLocations
   end
 
   def create_static_recording
@@ -89,5 +87,9 @@ class LevelMapper
         end
       end
     end
+  end
+
+  def set_valid_player_locations(locations)
+    Store.dispatch('UPDATE_VALID_LOCATIONS', locations)
   end
 end

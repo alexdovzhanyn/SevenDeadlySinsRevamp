@@ -1,5 +1,7 @@
 class MapReducer < Rydux::Reducer
-  @@initial_state = {}
+  @@initial_state = {
+    valid_locations: []
+  }
 
   def self.map_state(action, state = @@initial_state)
     case action[:type]

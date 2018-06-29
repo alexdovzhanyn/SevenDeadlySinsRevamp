@@ -20,9 +20,10 @@ require_relative 'lib/game/scenes/game_scene'
 require_relative 'lib/game/scenes/options_scene'
 
 require_relative 'lib/game/reducers/game_reducer'
+require_relative 'lib/game/reducers/map_reducer'
 
 include Helper
 
-Store = Rydux::Store.new(game: GameReducer)
+Store = Rydux::Store.new(game: GameReducer, map: MapReducer)
 
 Store.dispatch(type: 'LOAD_TILES')
