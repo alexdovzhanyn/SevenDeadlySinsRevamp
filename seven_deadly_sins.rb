@@ -5,7 +5,7 @@ class SevenDeadlySins < Gosu::Window
 
   def initialize
     print_debug_info
-    Store.subscribe{ [:game] }
+    Store.subscribe {[ :game ]}
     super WIDTH, HEIGHT
     self.caption = TITLE
 
@@ -14,11 +14,11 @@ class SevenDeadlySins < Gosu::Window
   end
 
   def update
-    Store.state.game.scene.update
+    Store.game.scene.update
   end
 
   def draw
-    Store.state.game.scene.draw
+    Store.game.scene.draw
   end
 
   def needs_cursor?

@@ -54,6 +54,6 @@ class Humanoid
     potential_x = ((bounding_box.x + 2) + direction_modifier_x)..((bounding_box.x - 2) + bounding_box.w + direction_modifier_x)
     potential_y = (bounding_box.y + bounding_box.h + direction_modifier_y)..(bounding_box.y + bounding_box.h + direction_modifier_y)
 
-    Store.state.map.valid_locations.any? {|location| range_contains_range?(location[0], potential_x) && range_contains_range?(location[1], potential_y)}
+    Store.map.valid_locations.any? {|location| range_contains_range?(location[0], potential_x) && range_contains_range?(location[1], potential_y)}
   end
 end

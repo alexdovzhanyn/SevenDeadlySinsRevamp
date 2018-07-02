@@ -3,27 +3,25 @@ class Camera
   attr_reader :offset_x, :offset_y
 
   def initialize(player)
+    Store.subscribe {[ :player ]}
     @offset_x, @offset_y = 0, 0
     @player_move_speed = player.move_speed
-
-    player.add_observer(self, :player_hit_hard_edge)
   end
 
-  def player_hit_hard_edge(edges)
-    if edges.include? :left
+  def state_changed(state)
+    if state.player.edges_hit.include? :left
       @offset_x -= @player_move_speed
-    elsif edges.include? :right
+    elsif state.player.edges_hit.include? :right
       @offset_x += @player_move_speed
     end
 
-    if edges.include? :up
+    if state.player.edges_hit.include? :up
       @offset_y -= @player_move_speed
-    elsif edges.include? :down
+    elsif state.player.edges_hit.include? :down
       @offset_y += @player_move_speed
     end
 
-    changed
-    notify_observers(@offset_x, @offset_y)
+    Store.dispatch('CAMERA_MOVED', { x: @offset_x, y: @offset_y })
   end
 
 end

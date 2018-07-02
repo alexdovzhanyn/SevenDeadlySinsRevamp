@@ -3,12 +3,11 @@ class TitleScene < Scene
   def initialize
     super
     puts '[Show Title Screen]'
-    puts "in title screen, #{Store.state.game.cursor}"
     @color = 0xff000000
   end
 
   def draw
-    # puts Store.state.game.cursor
+    # puts Store.game.cursor
     # Gosu.draw_rect(0, 0, window.width, window.height, @color, 0)
     case Gosu.milliseconds
     when 500..3000

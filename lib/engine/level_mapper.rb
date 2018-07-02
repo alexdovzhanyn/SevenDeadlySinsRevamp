@@ -3,8 +3,8 @@ class LevelMapper
   HARD_EDGE = 300
 
   def initialize(mapfile, camera)
-    Store.subscribe(self)
-    @window, @sprites = Store.state.game.window, Store.state.game.tiles
+    Store.subscribe {[ :camera ]}
+    @window, @sprites = Store.game.window, Store.game.tiles
     @map = initialize_mapfile(mapfile)
     @font = Gosu::Font.new(16)
     @offset_x, @offset_y = 0, 0
@@ -12,12 +12,10 @@ class LevelMapper
 
     # Pre-record map so that we can speed up rendering.
     create_static_recording
-
-    camera.add_observer(self, :camera_moved)
   end
 
-  def camera_moved(new_offset_x, new_offset_y)
-    @offset_x, @offset_y = new_offset_x, new_offset_y
+  def state_changed(state)
+    @offset_x, @offset_y = state.camera.x, state.camera.y
   end
 
   def update

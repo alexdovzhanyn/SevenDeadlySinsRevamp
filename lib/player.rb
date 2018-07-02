@@ -4,11 +4,11 @@ class Player < Humanoid
 
   def initialize(*opts)
     @width, @height = 64, 64
-    tiles = Store.state.game.tiles
+    tiles = Store.game.tiles
     sprites = [tiles[152], tiles[153], tiles[175], tiles[176]]
     opts += [@width, @height, sprites]
     super(*opts)
-    @window = Store.state.game.window
+    @window = Store.game.window
   end
 
   def update
@@ -53,8 +53,7 @@ class Player < Humanoid
     if edges_hit.length == 0 || !edges_hit.include?(direction)
       super(direction)
     else
-      changed
-      notify_observers(edges_hit)
+      Store.dispatch('HIT_EDGE', edges_hit)
     end
   end
 end

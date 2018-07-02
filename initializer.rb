@@ -4,7 +4,6 @@ require 'pry'
 require 'observer'
 require 'rydux'
 require_relative 'lib/game/metadata'
-require_relative 'lib/engine/game_state'
 require_relative 'lib/engine/scene'
 require_relative 'lib/engine/helper'
 require_relative 'lib/engine/camera'
@@ -21,9 +20,11 @@ require_relative 'lib/game/scenes/options_scene'
 
 require_relative 'lib/game/reducers/game_reducer'
 require_relative 'lib/game/reducers/map_reducer'
+require_relative 'lib/game/reducers/player_reducer'
+require_relative 'lib/game/reducers/camera_reducer'
 
 include Helper
 
-Store = Rydux::Store.new(game: GameReducer, map: MapReducer)
+Store = Rydux::Store.new(game: GameReducer, map: MapReducer, player: PlayerReducer, camera: CameraReducer)
 
 Store.dispatch(type: 'LOAD_TILES')

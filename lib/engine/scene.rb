@@ -2,10 +2,10 @@ class Scene
 
   def initialize
     Store.subscribe(self)
-    @window = Store.state.game.window
+    @window = Store.game.window
     @clickspots = []
     @offset_x = @window.width * 0.05
-    @tiles = Store.state.game.tiles
+    @tiles = Store.game.tiles
   end
 
   def draw
@@ -14,7 +14,7 @@ class Scene
 
   def update
     # Gosu.milliseconds eventually wraps. This will become a problem is the game runs for a while
-    if @buttons && Gosu.button_down?(Gosu::MS_LEFT) && Gosu.milliseconds > (Store.state.game.last_click || 0) + 200
+    if @buttons && Gosu.button_down?(Gosu::MS_LEFT) && Gosu.milliseconds > (Store.game.last_click || 0) + 200
       button = @clickspots.find {|spot| spot[:x].include?(@window.mouse_x) && spot[:y].include?(@window.mouse_y)}
       if button
         Store.dispatch('SET_LAST_CLICK', Gosu.milliseconds)

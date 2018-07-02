@@ -27,7 +27,7 @@ class VideoSettingsScene < Scene
   end
 
   def change_gui_scale
-    scale = Store.state.game.settings.gui_scale
+    scale = Store.game.settings.gui_scale
     new_scale = scale
 
     if scale == 'Auto'
