@@ -15,7 +15,7 @@ class LevelMapper
   end
 
   def state_changed(state)
-    @offset_x, @offset_y = state.camera.x, state.camera.y
+    @offset_x, @offset_y = state.x, state.y
   end
 
   def update

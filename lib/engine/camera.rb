@@ -9,15 +9,15 @@ class Camera
   end
 
   def state_changed(state)
-    if state.player.edges_hit.include? :left
+    if state.edges_hit.include? :left
       @offset_x -= @player_move_speed
-    elsif state.player.edges_hit.include? :right
+    elsif state.edges_hit.include? :right
       @offset_x += @player_move_speed
     end
 
-    if state.player.edges_hit.include? :up
+    if state.edges_hit.include? :up
       @offset_y -= @player_move_speed
-    elsif state.player.edges_hit.include? :down
+    elsif state.edges_hit.include? :down
       @offset_y += @player_move_speed
     end
 

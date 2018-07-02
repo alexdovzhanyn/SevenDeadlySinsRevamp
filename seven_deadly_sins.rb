@@ -26,7 +26,7 @@ class SevenDeadlySins < Gosu::Window
   end
 
   def state_changed(state)
-    @needs_cursor = state.game.cursor
+    @needs_cursor = state.cursor
   end
 
   def print_debug_info

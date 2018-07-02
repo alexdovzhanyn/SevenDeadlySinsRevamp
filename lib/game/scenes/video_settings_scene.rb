@@ -19,8 +19,8 @@ class VideoSettingsScene < Scene
     super
   end
 
-  def state_changed(new_state)
-    super(new_state)
+  def state_changed(state)
+    super(state)
 
     @options = generate_options
     initialize_buttons(@options)
